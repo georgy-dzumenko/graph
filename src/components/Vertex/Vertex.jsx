@@ -15,12 +15,12 @@ const StyledVertex = styled('div')`
 const Vertex = ({ name, coords, vertexKey }) => {
     const dispatch = useDispatch()
 
-    const onMouseDown = (event) => {
-        event.preventDefault()
+    const onMouseDown = () => {
         dispatch(startCurrentEdge(vertexKey))
     }
 
-    const onMouseUp = () => {
+    const onMouseUp = (event) => {
+        event.preventDefault()
         dispatch(endCurrentEdge(vertexKey))
     }
 

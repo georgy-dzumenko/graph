@@ -29,8 +29,8 @@ const Canvas = () => {
     const dispatch = useDispatch()
     const [mouseCoords, setMouseCoords] = useState({})
 
-    const renderEdge = (data) => {
-        return <Edge {...data}></Edge>
+    const renderEdge = (data, index) => {
+        return <Edge {...data} id={index}></Edge>
     }
 
     const renderVertex = (data) => {
@@ -50,22 +50,23 @@ const Canvas = () => {
                 })
             )
         }
-    }
-
-    const onMouseUp = () => {
         dispatch(cancelCurrentEdge())
     }
+
+    // const onMouseUp = (event) => {
+    //     event.preventDefault()
+    // }
 
     console.log({ ...{ ...currentEdge, endVertex: currentEdge?.endVertex || mouseCoords } })
 
     return (
         <CanvasContainer
-            onMouseUp={onMouseUp}
+            // onMouseUp={onMouseUp}
             onClick={addVertex}
             onMouseMove={(event) => setMouseCoords({ coords: { x: event.clientX, y: event.clientY } })}>
             <EdgesContainer></EdgesContainer>
             <VertexesContainer>
-                {currentEdge && <Edge {...{ ...currentEdge, endVertex: currentEdge?.endVertex || mouseCoords }} />}
+                {currentEdge && <Edge isCurrentEdge {...{ ...currentEdge, endVertex: currentEdge?.endVertex || mouseCoords }} />}
                 {edges.map(renderEdge)}
                 {vertexes.map(renderVertex)}
             </VertexesContainer>

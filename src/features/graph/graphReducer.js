@@ -24,6 +24,9 @@ export const graphSlice = createSlice({
                 }
             ]
         },
+        destroyEdge: (state, action) => {
+            state.edges = state.edges.filter((el, index) => index !== +action.payload)
+        },
         cancelCurrentEdge: (state) => {
             state.currentEdge = null
         },
@@ -51,6 +54,6 @@ export const graphSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { createEdge, createVertex, startCurrentEdge, endCurrentEdge, cancelCurrentEdge } = graphSlice.actions
+export const { createEdge, createVertex, startCurrentEdge, endCurrentEdge, cancelCurrentEdge, destroyEdge } = graphSlice.actions
 
 export default graphSlice.reducer

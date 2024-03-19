@@ -3,7 +3,10 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     currentEdge: null,
     edges: [],
-    vertexes: []
+    vertexes: [],
+    //context menu data:
+    isContextMenuOpened: false,
+    contextMenu: {}
 }
 
 export const graphSlice = createSlice({
@@ -27,6 +30,10 @@ export const graphSlice = createSlice({
         destroyEdge: (state, action) => {
             state.edges = state.edges.filter((el, index) => index !== +action.payload)
         },
+        destroyConnection: (state, action) => {
+            state.vertexes = state.vertexes.filter((v) => action.payload !== v.vertexKey)
+            state.edges = state.edges.filter((el, index) => el.startVertex !== action.payload && el.endVertex !== action.payload)
+        },
         cancelCurrentEdge: (state) => {
             state.currentEdge = null
         },
@@ -49,11 +56,29 @@ export const graphSlice = createSlice({
                     vertexKey: action.payload.vertexKey
                 }
             ]
+        },
+        openContextMenu: (state, action) => {
+            state.contextMenu = action.payload
+            state.isContextMenuOpened = true
+        },
+        closeContextMenu: (state, action) => {
+            state.isContextMenuOpened = false
+            state.contextMenu = {}
         }
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { createEdge, createVertex, startCurrentEdge, endCurrentEdge, cancelCurrentEdge, destroyEdge } = graphSlice.actions
+export const {
+    openContextMenu,
+    closeContextMenu,
+    createEdge,
+    createVertex,
+    startCurrentEdge,
+    endCurrentEdge,
+    cancelCurrentEdge,
+    destroyEdge,
+    destroyConnection
+} = graphSlice.actions
 
 export default graphSlice.reducer

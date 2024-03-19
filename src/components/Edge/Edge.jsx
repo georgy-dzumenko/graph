@@ -19,7 +19,7 @@ const Edge = ({ endVertex, startVertex, isCurrentEdge, id }) => {
     }, [endVertex])
 
     return (
-        <svg draggable={false} style={{ width: '100%', height: '100%', position: 'absolute', stroke: color, fill: color }}>
+        <svg draggable={false} style={{ userDrag: 'none', width: '100%', height: '100%', position: 'absolute', stroke: color, fill: color }}>
             <marker
                 xmlns='http://www.w3.org/2000/svg'
                 id={`triangle-${randomId.current}`}
@@ -27,13 +27,15 @@ const Edge = ({ endVertex, startVertex, isCurrentEdge, id }) => {
                 refX={isCurrentEdge ? '10' : '20'}
                 refY='5'
                 markerUnits='strokeWidth'
-                markerWidth='8'
-                markerHeight='6'
-                orient='auto'>
+                markerWidth='6'
+                markerHeight='4'
+                orient='auto'
+                draggable={false}>
                 <path d='M 0 0 L 10 5 L 0 10 z' />
             </marker>
             {/* ${endPoint.x !== startPoint.x ? `${startPoint.x}, ${endPoint.y}` : ""} */}
             <polyline
+                draggable={false}
                 id={id}
                 onMouseEnter={() => {
                     setColor('yellow')
@@ -45,10 +47,12 @@ const Edge = ({ endVertex, startVertex, isCurrentEdge, id }) => {
                     event.preventDefault()
                     event.stopPropagation()
                 }}
+                onMouseDown={(event) => {
+                    event.preventDefault()
+                }}
                 onClick={(event) => {
                     event.preventDefault()
                     event.stopPropagation()
-                    console.log('destroyEdge')
                     dispatch(destroyEdge(id))
                 }}
                 marker-end={`url(#triangle-${randomId.current})`}

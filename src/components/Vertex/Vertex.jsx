@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from '@theme/styled'
 import { useDispatch } from 'react-redux'
-import { endCurrentEdge, startCurrentEdge } from '../../features/graph/graphReducer'
+import { destroyConnection, endCurrentEdge, openContextMenu, startCurrentEdge } from '../../features/graph/graphReducer'
 
 const StyledVertex = styled('div')`
     background-color: ${'accent'};
@@ -15,20 +15,55 @@ const StyledVertex = styled('div')`
 const Vertex = ({ name, coords, vertexKey }) => {
     const dispatch = useDispatch()
 
-    const onMouseDown = () => {
-        dispatch(startCurrentEdge(vertexKey))
+    const onMouseDown = (event) => {
+        event.preventDefault()
+        if (event.button === 0) {
+            dispatch(startCurrentEdge(vertexKey))
+        }
     }
 
     const onMouseUp = (event) => {
         event.preventDefault()
-        dispatch(endCurrentEdge(vertexKey))
+        if (event.button === 0) {
+            dispatch(endCurrentEdge(vertexKey))
+        }
     }
 
     const onClick = (event) => {
-        event.preventDefault()
+        if (event.button === 0) {
+            event.preventDefault()
+        }
     }
 
-    return <StyledVertex key={vertexKey} $top={coords.y} $left={coords.x} onMouseDown={onMouseDown} onMouseUp={onMouseUp} onClick={onClick} />
+    const onContextMenu = (event) => {
+        event.preventDefault()
+        dispatch(
+            openContextMenu({
+                title: 'lorem ipsum',
+                coords: { x: event.clientX, y: event.clientY },
+                options: [
+                    {
+                        callback: () => {
+                            dispatch(destroyConnection(vertexKey))
+                        },
+                        title: 'delete'
+                    }
+                ]
+            })
+        )
+    }
+
+    return (
+        <StyledVertex
+            key={vertexKey}
+            $top={coords.y}
+            $left={coords.x}
+            onContextMenu={onContextMenu}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onClick={onClick}
+        />
+    )
 }
 
 export default Vertex

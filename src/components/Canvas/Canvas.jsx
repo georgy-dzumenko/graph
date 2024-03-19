@@ -3,7 +3,7 @@ import styled from '@theme/styled'
 import Vertex from '@components/Vertex/Vertex'
 import Edge from '@components/Edge/Edge'
 import { useDispatch, useSelector } from 'react-redux'
-import { cancelCurrentEdge, createVertex } from '../../features/graph/graphReducer'
+import { cancelCurrentEdge, closeContextMenu, createVertex, openContextMenu } from '../../features/graph/graphReducer'
 
 const CanvasContainer = styled('div')`
     flex: 1;
@@ -25,7 +25,7 @@ const VertexesContainer = styled('div')`
 
 const Canvas = () => {
     const canvas = useRef()
-    const { currentEdge, edges, vertexes } = useSelector((state) => state.graph)
+    const { currentEdge, edges, vertexes, isContextMenuOpened } = useSelector((state) => state.graph)
     const dispatch = useDispatch()
     const [mouseCoords, setMouseCoords] = useState({})
 
@@ -53,19 +53,9 @@ const Canvas = () => {
         dispatch(cancelCurrentEdge())
     }
 
-    // const onMouseUp = (event) => {
-    //     event.preventDefault()
-    // }
-
-    console.log({ ...{ ...currentEdge, endVertex: currentEdge?.endVertex || mouseCoords } })
-
     return (
-        <CanvasContainer
-            // onMouseUp={onMouseUp}
-            onClick={addVertex}
-            onMouseMove={(event) => setMouseCoords({ coords: { x: event.clientX, y: event.clientY } })}>
-            <EdgesContainer></EdgesContainer>
-            <VertexesContainer>
+        <CanvasContainer onClick={addVertex} onMouseMove={(event) => setMouseCoords({ coords: { x: event.clientX, y: event.clientY } })}>
+            <VertexesContainer draggable={false}>
                 {currentEdge && <Edge isCurrentEdge {...{ ...currentEdge, endVertex: currentEdge?.endVertex || mouseCoords }} />}
                 {edges.map(renderEdge)}
                 {vertexes.map(renderVertex)}

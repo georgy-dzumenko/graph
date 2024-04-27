@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import _styled, { createGlobalStyle as _createGlobalStyle, css as _css, keyframes as _keyframes, withTheme } from 'styled-components'
 import cssPropsArray from './cssPropsArray'
 
@@ -148,12 +148,14 @@ const styled = (component, styledProps = {}) => {
 
         const Component = _styled(component)(stylesArr, ...callbackList)
 
-        return withTheme((props) => {
-            const { theme, ...data } = props
-            const commonProps = useMemo(() => commonPropsCallback(data, cssPropsArray, theme), [theme, data])
+        return withTheme(
+            forwardRef((props, ref) => {
+                const { theme, ...data } = props
+                const commonProps = useMemo(() => commonPropsCallback(data, cssPropsArray, theme), [theme, data])
 
-            return <Component {...data} theme={theme} style={{ ...data?.style, ...commonProps }} />
-        })
+                return <Component ref={ref} {...data} theme={theme} style={{ ...data?.style, ...commonProps }} />
+            })
+        )
     }
 }
 

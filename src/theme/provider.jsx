@@ -20,8 +20,6 @@ const MainThemeProvider = (props) => {
 
     const shouldForwardProp = (prop) => !['variant'].includes(prop)
 
-    console.log('theme', theme)
-
     return (
         <ThemeProvider theme={theme}>
             <StyleSheetManager shouldForwardProp={shouldForwardProp}>

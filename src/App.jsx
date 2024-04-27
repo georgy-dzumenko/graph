@@ -4,6 +4,7 @@ import ActionPanel from '@components/ActionPanel/ActionPanel'
 import Canvas from '@components/Canvas/Canvas'
 import styled from '@theme/styled'
 import ContextMenu from './components/ContextMenu/ContextMenu'
+import Modal from './components/Modal/Modal'
 
 const Container = styled('div')`
     display: flex;
@@ -14,6 +15,7 @@ function App() {
     return (
         <Container>
             <ContextMenu />
+            <Modal />
             <Canvas />
             <ActionPanel />
         </Container>

@@ -1,5 +1,6 @@
 import React from 'react'
-import styled from '../../theme/styled'
+
+import styled from '@theme/styled'
 
 const StyledRect = styled('div')`
     position: absolute;

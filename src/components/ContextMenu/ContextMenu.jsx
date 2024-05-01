@@ -2,7 +2,9 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from '@theme/styled'
-import { closeContextMenu } from '../../features/graph/interfaceReducer'
+
+import { closeContextMenu } from '@features/interface/interfaceReducer'
+import getInterface from '@features/interface/getInterface'
 
 const Container = styled('div')`
     background-color: ${'background'};
@@ -39,7 +41,7 @@ const Option = styled('div')`
 `
 
 const ContextMenu = () => {
-    const { contextMenu, isContextMenuOpened } = useSelector((state) => state.interface)
+    const { contextMenu, isContextMenuOpened } = useSelector(getInterface)
     const dispatch = useDispatch()
 
     return isContextMenuOpened ? (

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import createEdgeKey from '@utils/createEdgeKey'
 
 const initialState = {
     currentEdge: null,
@@ -21,7 +22,7 @@ export const graphSlice = createSlice({
                 {
                     startVertex: state.currentEdge.startVertex,
                     endVertex: action.payload,
-                    edgeKey: `${state.currentEdge.startVertex}=>${action.payload}`,
+                    edgeKey: createEdgeKey(state.currentEdge.startVertex, action.payload),
                     cost: 1
                 }
             ]
@@ -69,7 +70,7 @@ export const graphSlice = createSlice({
                 {
                     startVertex: action.payload.startVertexKey,
                     endVertex: action.payload.endVertexKey,
-                    edgeKey: `${action.payload.startVertexKey}=>${action.payload.endVertexKey}`,
+                    edgeKey: createEdgeKey(action.payload.startVertexKey, action.payload.endVertexKey),
                     cost: action.payload.cost
                 }
             ]

@@ -1,15 +1,15 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeEdgeCost } from '../../features/graph/graphReducer'
-import MatrixCell from '../MatrixCell/MatrixCell'
-import styled from '../../theme/styled'
 
-const Td = styled('td')`
-    padding: 2px;
-`
+import createEdgeKey from '@utils/createEdgeKey'
+
+import MatrixCell from '@components/MatrixCell/MatrixCell'
+import MatrixTh from '@components/MatrixTh/MatrixTh'
+
+import getGraph from '@features/graph/getGraph'
 
 const Matrix = () => {
-    const { adjMatrix, vertexes } = useSelector((state) => state.graph)
+    const { adjMatrix, vertexes } = useSelector(getGraph)
     const dispatch = useDispatch()
 
     return (
@@ -17,15 +17,15 @@ const Matrix = () => {
             <tr>
                 <td></td>
                 {vertexes.map((el, index) => (
-                    <Td>{index}</Td>
+                    <MatrixTh horizontal index={index} vertexKey={el.vertexKey}/>
                 ))}
             </tr>
             {vertexes.map((row, index) => (
                 <tr>
-                    <Td>{index}</Td>
+                    <MatrixTh vertexKey={row.vertexKey} index={index}/>
                     {vertexes.map((el) => (
                         <td key={el.vertexKey}>
-                            <MatrixCell key={el.vertexKey} edgeKey={`${row.vertexKey}=>${el.vertexKey}`} />
+                            <MatrixCell key={el.vertexKey} edgeKey={createEdgeKey(row.vertexKey, el.vertexKey)} />
                         </td>
                     ))}
                 </tr>

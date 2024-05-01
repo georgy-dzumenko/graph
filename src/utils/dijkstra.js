@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import getGraph from '../features/graph/getGraph'
+import getGraph from '@features/graph/getGraph'
 
 const useDijkstra = () => {
     const { vertexes, adjMatrix } = useSelector(getGraph)
@@ -38,6 +38,7 @@ function dijkstra(vertices, links, startVertexKey, endVertexKey) {
             const link = links[currentVertexIndex][i]
             if (link && link.startVertex === vertices[currentVertexIndex].vertexKey) {
                 const neighborIndex = i
+                console.log(link)
                 const distanceToNeighbor = distances[currentVertexIndex] + link.cost
 
                 if (distanceToNeighbor < distances[neighborIndex]) {

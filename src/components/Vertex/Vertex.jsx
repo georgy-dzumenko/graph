@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from '@theme/styled'
 import { useDispatch, useSelector } from 'react-redux'
+
 import {
     cleanSelectedVertexes,
     destroyVertex,
@@ -8,11 +8,15 @@ import {
     renameVertex,
     selectVertexes,
     startCurrentEdge
-} from '../../features/graph/graphReducer'
-import { openContextMenu, openModal } from '../../features/graph/interfaceReducer'
-import getInterface from '../../features/graph/getInterface'
-import getGraph from '../../features/graph/getGraph'
-import { keyframes } from '../../theme/styled'
+} from '@features/graph/graphReducer'
+import { openContextMenu, openModal, setHoverData } from '@features/interface/interfaceReducer'
+import getInterface from '@features/interface/getInterface'
+import getGraph from '@features/graph/getGraph'
+
+import createEdgeKey from '@utils/createEdgeKey'
+
+import styled from '@theme/styled'
+import { keyframes } from '@theme/styled'
 
 const accent = keyframes`
     from {
@@ -27,7 +31,6 @@ const accent = keyframes`
 const StyledVertex = styled('div')`
     background-color: ${'accent'};
     transition: 0.2s ease;
-    cursor: ${({ $selectVertexMethod }) => ($selectVertexMethod ? 'pointer' : 'none')};
     width: ${({ $selectVertexMethod }) => ($selectVertexMethod ? '30px' : '20px')};
     height: ${({ $selectVertexMethod }) => ($selectVertexMethod ? '30px' : '20px')};
     z-index: 10;
@@ -48,6 +51,14 @@ const Vertex = ({ name, coords, vertexKey, index }) => {
 
     const { selectedVertexes } = useSelector(getGraph)
     const { selectVertexMethod } = useSelector(getInterface)
+
+    const onMouseEnter = () => {
+        dispatch(setHoverData(createEdgeKey(vertexKey, vertexKey)))
+    }
+
+    const onMouseLeave = () => {
+        dispatch(setHoverData(''))
+    }
 
     const onMouseDown = (event) => {
         event.preventDefault()
@@ -76,7 +87,11 @@ const Vertex = ({ name, coords, vertexKey, index }) => {
 
     const renameModalData = {
         title: `RENAME '${name}' VERTEX`,
-        element: <input id='rename-input' />,
+        element: ({modalRef}) => (
+            <div>
+                <input id='rename-input' />
+                <button onClick={modalRef.current.removeFilter}>button</button>
+            </div>),
         options: [
             {
                 callback: () => {
@@ -125,7 +140,10 @@ const Vertex = ({ name, coords, vertexKey, index }) => {
             onContextMenu={onContextMenu}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
             onClick={onClick}
+            $cursor={selectVertexMethod ? 'pointer' : 'auto'}
             $selectVertexMethod={selectVertexMethod}>
             <div
                 style={{

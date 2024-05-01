@@ -5,7 +5,12 @@ const initialState = {
     contextMenu: {},
     modal: {},
     selectVertexMethod: null,
-    isModalOpened: false
+    isModalOpened: false,
+    hoverData: {
+        fromVertex: null,
+        toVertex: null,
+    },
+    demonstrateList: []
 }
 
 export const interfaceSlice = createSlice({
@@ -30,11 +35,17 @@ export const interfaceSlice = createSlice({
         },
         setSelectedVertexMethod: (state, action) => {
             state.selectVertexMethod = action.payload
+        },
+        setHoverData: (state, action) => {
+            state.hoverData = action.payload
+        },
+        setDemonstrateList: (state, action) => {
+            state.demonstrateList = action.payload
         }
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { openContextMenu, closeContextMenu, closeModal, openModal, setSelectedVertexMethod } = interfaceSlice.actions
+export const { openContextMenu, closeContextMenu, closeModal, openModal, setDemonstrateList, setSelectedVertexMethod, setHoverData } = interfaceSlice.actions
 
 export default interfaceSlice.reducer

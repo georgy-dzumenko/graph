@@ -1,9 +1,11 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setSelectedVertexMethod } from '../../features/graph/interfaceReducer'
-import styled from '../../theme/styled'
-import getGraph from '../../features/graph/getGraph'
-import getInterface from '../../features/graph/getInterface'
+
+import { setSelectedVertexMethod } from '@features/interface/interfaceReducer'
+import getGraph from '@features/graph/getGraph'
+
+import styled from '@theme/styled'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const SelectorComponents = styled('div')`
     background-color: white;
@@ -17,11 +19,12 @@ const SelectorComponents = styled('div')`
     border: solid 1px ${'primary'};
     position: relative;
 
-    &::after {
-        content: '⌄';
+    .chevron {
         position: absolute;
+        height: 20px;
+        width: 20px;
         top: 50%;
-        transform: scaleX(175%) translateY(-75%);
+        transform: translate(-50%, -50%);
         font-size: 16px;
         right: 5px;
     }
@@ -83,6 +86,8 @@ const VertexSelector = forwardRef((props, ref) => {
         <SelectorComponents onClick={onClick}>
             <label className={`label ${valueKey ? 'label--focused' : ''}`}>vertex</label>
             <div className='content'>{value ? value.index : ''}</div>
+            {/* <div className='chevron' */}
+            <FontAwesomeIcon className='chevron' icon="fa-solid fa-chevron-down" />
         </SelectorComponents>
     )
 })

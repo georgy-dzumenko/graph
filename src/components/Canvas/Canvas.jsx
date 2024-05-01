@@ -1,13 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { cancelCurrentEdge, createVertex, generateMatrix, selectVertexes } from '@features/graph/graphReducer'
+import getGraph from '@features/graph/getGraph'
+import getInterface from '@features/interface/getInterface'
+
 import styled from '@theme/styled'
+
 import Vertex from '@components/Vertex/Vertex'
 import Edge from '@components/Edge/Edge'
-import { useDispatch, useSelector } from 'react-redux'
-import { cancelCurrentEdge, createVertex, generateMatrix, selectVertexes } from '../../features/graph/graphReducer'
-import SelectionArea from '../SelectionArea/SelectionArea'
-import getGraph from '../../features/graph/getGraph'
-import Flex from '../Flex/Flex'
-import getInterface from '../../features/graph/getInterface'
+import SelectionArea from '@components/SelectionArea/SelectionArea'
+import Flex from '@components/Flex/Flex'
+import Demonstrator from '@components/Demonstrator/Demonstrator'
+import parseEdgeKey from '../../utils/parseEdgeKey'
 
 const CanvasContainer = styled('div')`
     flex: 1;
@@ -29,20 +34,20 @@ const VertexesContainer = styled('div')`
 
 const Canvas = () => {
     const canvas = useRef()
-    const { currentEdge, edges, vertexes, isContextMenuOpened, selectedVertexes } = useSelector(getGraph)
-    const { selectVertexMethod } = useSelector(getInterface)
+    const { currentEdge, edges, vertexes } = useSelector(getGraph)
+    const { selectVertexMethod, hoverData } = useSelector(getInterface)
     const dispatch = useDispatch()
     const [mouseCoords, setMouseCoords] = useState({})
 
     const [selectAreaCoords, setSelectAreaCoords] = useState({})
 
-    const renderEdge = (data, index) => {
+    const renderEdge = useCallback((data, index) => {
         return <Edge {...data} id={index}></Edge>
-    }
+    }, [])
 
-    const renderVertex = (data) => {
+    const renderVertex = useCallback((data) => {
         return <Vertex {...data}></Vertex>
-    }
+    }, [])
 
     const addVertex = (event) => {
         if (!currentEdge && !selectAreaCoords.endPoint) {
@@ -90,6 +95,7 @@ const Canvas = () => {
             ref={canvas}>
             <VertexesContainer draggable={false}>
                 {currentEdge && <Edge isCurrentEdge {...{ ...currentEdge, endVertex: currentEdge?.endVertex || mouseCoords }} />}
+                {hoverData && <Edge isGhost startVertex={parseEdgeKey(hoverData)[0]} endVertex={parseEdgeKey(hoverData)[1]} />}
                 {edges.map(renderEdge)}
                 {vertexes.map(renderVertex)}
                 <Flex
@@ -102,6 +108,7 @@ const Canvas = () => {
                         position: 'absolute',
                         background: !selectVertexMethod ? 'transparent' : 'rgba(0,0,0,0.2)'
                     }}></Flex>
+                <Demonstrator/>
                 <SelectionArea canvas={canvas.current} {...selectAreaCoords} />
             </VertexesContainer>
         </CanvasContainer>

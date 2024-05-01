@@ -1,5 +1,4 @@
 import { createGlobalStyle } from '@theme/styled'
-import { palette } from '@theme/palette'
 
 const GlobalStyles = createGlobalStyle`
     body {

@@ -1,10 +1,9 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import graphReducer from '../features/graph/graphReducer'
-import storage from 'redux-persist/lib/storage'
 import { persistReducer, persistStore } from 'redux-persist'
-import { composeWithDevTools } from '@redux-devtools/extension'
-import interfaceReducer from '../features/graph/interfaceReducer'
-// import { composeWithDevTools } from '@redux-devtools/extension/lib/types/logOnly'
+import storage from 'redux-persist/lib/storage'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import graphReducer from '@features/graph/graphReducer'
+import interfaceReducer from '@features/interface/interfaceReducer'
+
 
 const interfacePersistConfig = {
     key: 'interface',

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import getGraph from '../features/graph/getGraph'
+import getGraph from '@features/graph/getGraph'
 
 const useFloydWarshall = () => {
     const { vertexes, adjMatrix } = useSelector(getGraph)

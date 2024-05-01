@@ -1,24 +1,78 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { destroyEdge } from '../../features/graph/graphReducer'
-import { openContextMenu } from '../../features/graph/interfaceReducer'
-import Flex from '../Flex/Flex'
+import { useTheme } from 'styled-components'
 
-const Edge = ({ endVertex, startVertex, cost, isCurrentEdge, id }) => {
+import { destroyEdge } from '@features/graph/graphReducer'
+import getInterface from '@features/interface/getInterface'
+import getGraph from '@features/graph/getGraph'
+import { openContextMenu, setHoverData } from '@features/interface/interfaceReducer'
+
+import createEdgeKey from '@utils/createEdgeKey'
+
+import Flex from '@components/Flex/Flex'
+import parseEdgeKey from '../../utils/parseEdgeKey'
+
+const DISTANCE_FOR_PARALEL = 5
+
+const Edge = ({ isGhost, endVertex, startVertex, cost, isCurrentEdge, id }) => {
     const randomId = useRef(Math.random())
-    const [color, setColor] = useState('green')
+    const {colors} = useTheme()
+    
     const dispatch = useDispatch()
 
-    const { vertexes } = useSelector((state) => state.graph)
+    const {hoverData} = useSelector(getInterface)
+    const { vertexes, edges } = useSelector(getGraph)
+    
+    const edgeKey = createEdgeKey(startVertex, endVertex)
+    
+    const color = useMemo(() => hoverData === edgeKey ? colors.accentLight : colors.primary, [hoverData])
+
     const startPoint = useMemo(() => {
-        return vertexes.find(({ vertexKey }) => startVertex === vertexKey)
-    }, [startVertex])
+        const vertex = vertexes.find(({ vertexKey }) => startVertex === vertexKey)    
+
+        const altEdge = edges.find(({ edgeKey: _edgeKey }) => createEdgeKey(endVertex, startVertex) === _edgeKey)
+        if(altEdge && endVertex !== startVertex) {
+            const altStartVertex = vertexes.find(({vertexKey}) => vertexKey === parseEdgeKey(altEdge.edgeKey)[0])
+            let xDiff = DISTANCE_FOR_PARALEL
+            let yDiff = -DISTANCE_FOR_PARALEL
+
+            if(altStartVertex.coords.x > vertex.coords.x) {
+                xDiff *= -1
+            }
+
+            if(altStartVertex.coords.y > vertex.coords.y) {
+                yDiff *= -1
+            }
+
+            return {...vertex, coords: {x: vertex.coords.x + xDiff, y: vertex.coords.y + yDiff}}
+        }
+        return vertex
+    }, [startVertex, endVertex, vertexes, edges])
+
     const endPoint = useMemo(() => {
         if (typeof endVertex === 'string') {
-            return vertexes.find(({ vertexKey }) => endVertex === vertexKey)
+            const vertex = vertexes.find(({ vertexKey }) => endVertex === vertexKey)    
+            const altEdge = edges.find(({ edgeKey: _edgeKey }) => createEdgeKey(endVertex, startVertex) === _edgeKey)
+            if(altEdge && endVertex !== startVertex) {
+                const altStartVertex = vertexes.find(({vertexKey}) => vertexKey === parseEdgeKey(altEdge.edgeKey)[1])
+                let xDiff = DISTANCE_FOR_PARALEL
+                let yDiff = -DISTANCE_FOR_PARALEL
+
+                console.log('2endVertexData', vertex, altStartVertex)
+                if(altStartVertex.coords.x < vertex.coords.x) {
+                    xDiff *= -1
+                }
+
+                if(altStartVertex.coords.y < vertex.coords.y) {
+                    yDiff *= -1
+                }
+
+                return {...vertex, coords: {x: vertex.coords.x + xDiff, y: vertex.coords.y + yDiff}}
+            }
+            return vertex
         }
         return endVertex
-    }, [endVertex])
+    }, [endVertex, startVertex, vertexes, edges])
 
     const onContextMenu = (event) => {
         event.preventDefault()
@@ -38,9 +92,11 @@ const Edge = ({ endVertex, startVertex, cost, isCurrentEdge, id }) => {
         )
     }
 
+    const toSelf = endVertex === startVertex
+
     return (
         <>
-            <svg draggable={false} style={{ width: '100%', height: '100%', pointerEvents: 'none', position: 'absolute', stroke: color, fill: color }}>
+            <svg draggable={false} style={{ opacity: isGhost ? 0.4 : 1, width: '100%', height: '100%', pointerEvents: 'none', position: 'absolute', stroke: color, fill: color }}>
                 <marker
                     xmlns='http://www.w3.org/2000/svg'
                     id={`triangle-${randomId.current}`}
@@ -69,10 +125,10 @@ const Edge = ({ endVertex, startVertex, cost, isCurrentEdge, id }) => {
                     draggable={false}
                     id={id}
                     onMouseEnter={() => {
-                        setColor('lightgreen')
+                        dispatch(setHoverData(edgeKey))
                     }}
                     onMouseLeave={() => {
-                        setColor('green')
+                        dispatch(setHoverData(''))
                     }}
                     onMouseUp={(event) => {
                         event.preventDefault()
@@ -95,28 +151,29 @@ const Edge = ({ endVertex, startVertex, cost, isCurrentEdge, id }) => {
                 style={{ pointerEvents: 'none' }}
                 $position='absolute'
                 $left={
-                    startPoint?.coords?.x < endPoint?.coords?.x
+                    (startPoint?.coords?.x < endPoint?.coords?.x
                         ? startPoint?.coords?.x + (endPoint?.coords?.x - startPoint?.coords?.x) / 2
-                        : endPoint?.coords?.x + (startPoint?.coords?.x - endPoint?.coords?.x) / 2
+                        : endPoint?.coords?.x + (startPoint?.coords?.x - endPoint?.coords?.x) / 2) + (+toSelf * -30)
                 }
                 $top={
                     startPoint?.coords?.y < endPoint?.coords?.y
                         ? startPoint?.coords?.y + (endPoint?.coords?.y - startPoint?.coords?.y) / 2
                         : endPoint?.coords?.y + (startPoint?.coords?.y - endPoint?.coords?.y) / 2
                 }
+                $opacity={isGhost ? 0.4 : 1}
                 $userSelect='none'
-                $width={22}
-                $height={22}
+                $width={16}
+                $height={16}
                 $background='white'
                 $borderStyle='solid'
                 $borderWidth='1px'
                 $fontFamily='Arial'
-                $borderColor={'primary'}
+                $borderColor='primary'
                 $alignItems='center'
                 $justifyContent='center'
                 $transform='translate(-50%, -50%)'
                 $borderRadius='50%'>
-                {cost}
+                {cost || 0}
             </Flex>
         </>
     )

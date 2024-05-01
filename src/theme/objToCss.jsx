@@ -1,8 +1,3 @@
-/**
- * @version 1.0
- * @author heorhii
- */
-
 import { css } from '@theme/styled'
 
 const camelToSnakeCase = (str) => str.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)

@@ -1,9 +1,3 @@
-/**
- * @version 1.0
- * @author heorhii
- */
-
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { StyleSheetManager, ThemeProvider } from 'styled-components'
 
 import GlobalStyles from '@theme/globalStyles'

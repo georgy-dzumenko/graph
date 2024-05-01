@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from 'react'
-import styled from '../../theme/styled'
-import { useDispatch, useSelector } from 'react-redux'
-import Matrix from '../Matrix/Matrix'
-import useFloydWarshall from '../../utils/floyd'
-import VertexSelector from '../VertexSelector/VertexSelector'
-import Flex from '../Flex/Flex'
-import useDijkstra from '../../utils/dijkstra'
-import { openModal } from '../../features/graph/interfaceReducer'
+import { useDispatch } from 'react-redux'
+
+import useDijkstra from '@utils/dijkstra'
+
+import { openModal, setDemonstrateList } from '@features/interface/interfaceReducer'
+
+import styled from '@theme/styled'
+
+import Matrix from '@components/Matrix/Matrix'
+import VertexSelector from '@components/VertexSelector/VertexSelector'
+import Flex from '@components/Flex/Flex'
 
 const ActionPanelStyledContainer = styled('div')`
     height: 100vh;
@@ -48,8 +51,6 @@ const Separator = styled(Flex)`
 `
 
 const ActionPanel = () => {
-    const { adjMatrix } = useSelector((state) => state.graph)
-
     const dispatch = useDispatch()
     const floydFrom = useRef()
     const floydTo = useRef()
@@ -78,18 +79,29 @@ const ActionPanel = () => {
                         dispatch(
                             openModal({
                                 title: 'Result',
-                                element: (
-                                    <Flex style={{ flexDirection: 'column' }}>
-                                        <Flex>STEPS:</Flex>
-                                        {steps?.map((el, index) => {
-                                            return (
-                                                <Flex>
-                                                    {index}): {el.index} ("{el.name}")
-                                                </Flex>
-                                            )
-                                        })}
-                                    </Flex>
-                                ),
+                                element: ({modalRef}) => {
+
+                                    console.log(steps)
+
+                                    const show = async () => {
+                                        modalRef.current.removeFilter()
+                                        dispatch(setDemonstrateList(steps))
+                                    }
+
+                                    return (
+                                        <Flex style={{ flexDirection: 'column' }}>
+                                            <Flex>STEPS:</Flex>
+                                            {steps?.map((el, index) => {
+                                                return (
+                                                    <Flex>
+                                                        {index}): {el.index} ("{el.name}")
+                                                    </Flex>
+                                                )
+                                            })}
+                                            <button onClick={show}>show</button>
+                                        </Flex>
+                                    )
+                                },
                                 options: []
                             })
                         )

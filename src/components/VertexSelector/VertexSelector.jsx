@@ -6,36 +6,39 @@ import getGraph from '@features/graph/getGraph'
 
 import styled from '@theme/styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import useTranslations from '../../utils/useTranslations'
 
 const SelectorComponents = styled('div')`
-    background-color: white;
+    background-color: ${'white'};
     flex: 1;
     height: 30px;
-    padding: 0 5px;
-    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     font-size: 16px;
-    border: solid 1px ${'primary'};
+    border: solid 1px ${'gray'};
     position: relative;
 
     .chevron {
         position: absolute;
-        height: 20px;
-        width: 20px;
+        height: 16px;
+        width: 16px;
         top: 50%;
         transform: translate(-50%, -50%);
-        font-size: 16px;
+        font-size: 12px;
         right: 5px;
     }
 
     .label {
         position: absolute;
         font-size: 14px;
+        font-weight: bold;
     }
 
     .label--focused {
-        font-size: 10px;
+        font-size: 12px;
         top: 0px;
         background-color: ${'primary'};
         color: white;
@@ -47,6 +50,7 @@ const SelectorComponents = styled('div')`
 
     .content {
         padding-top: 4px;
+        font-weight: bold;
     }
 `
 
@@ -54,6 +58,7 @@ const VertexSelector = forwardRef((props, ref) => {
     const [valueKey, setValueKey] = useState(false)
     const [value, setValue] = useState(false)
     const { vertexes } = useSelector(getGraph)
+    const {t} = useTranslations()
     const dispatch = useDispatch()
 
     useImperativeHandle(
@@ -84,7 +89,7 @@ const VertexSelector = forwardRef((props, ref) => {
 
     return (
         <SelectorComponents onClick={onClick}>
-            <label className={`label ${valueKey ? 'label--focused' : ''}`}>vertex</label>
+            <label className={`label ${valueKey ? 'label--focused' : ''}`}>{t('Vertex')}</label>
             <div className='content'>{value ? value.index : ''}</div>
             {/* <div className='chevron' */}
             <FontAwesomeIcon className='chevron' icon="fa-solid fa-chevron-down" />

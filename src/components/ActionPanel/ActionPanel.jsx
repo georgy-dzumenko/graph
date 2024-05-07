@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import useDijkstra from '@utils/dijkstra'
+import useFloydWarshall from '@utils/floyd'
 
 import { openModal, setDemonstrateList } from '@features/interface/interfaceReducer'
 
@@ -10,35 +11,31 @@ import styled from '@theme/styled'
 import Matrix from '@components/Matrix/Matrix'
 import VertexSelector from '@components/VertexSelector/VertexSelector'
 import Flex from '@components/Flex/Flex'
+import Button from '../Button/Button'
+import SectionTitle from '../SectionTitle/SectionTitle'
+import useTranslations from '../../utils/useTranslations'
+
 
 const ActionPanelStyledContainer = styled('div')`
     height: 100vh;
-    width: 300px;
+    width: 340px;
     border-left: 1px solid ${'primary'};
-    padding: 5px;
+    padding: 16px;
     box-sizing: border-box;
     background-color: ${'background'};
     font-family: Arial, Helvetica, sans-serif;
 `
 
-const Button = styled(Flex)`
-    background-color: white;
-    border-radius: 6px;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    padding: 5px;
-    border: 2px solid ${'primary'};
-`
+
 
 const ActionBlock = styled(Flex)`
     width: 100%;
-    border-radius: 5px;
-    border: 1px solid ${'primary'};
-    background-color: ${'secondary'};
+    border-radius: 12px;
+    /* border: 1px solid ${'primary'}; */
+    /* background-color: ${'white'}; */
     justify-content: center;
-    gap: 5px;
-    padding: 5px;
+    gap: 12px;
+    /* padding: 12px 8px; */
     flex-direction: column;
     box-sizing: border-box;
 `
@@ -46,8 +43,28 @@ const ActionBlock = styled(Flex)`
 const Separator = styled(Flex)`
     width: 100%;
     height: 1px;
-    margin: 10px 0;
-    background-color: gray;
+    margin: 20px 0;
+    background-color: ${'gray'};
+`
+
+const Step = styled(Flex)`
+    border: solid 1px ${'gray'};
+    align-items: center;
+    padding: 4px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    justify-content: space-between;
+`
+
+const Vertex = styled(Flex)`
+    background-color: ${'accent'};
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+    padding: 4px;
+    width: 16px;
+    height: 16px;
 `
 
 const ActionPanel = () => {
@@ -56,8 +73,10 @@ const ActionPanel = () => {
     const floydTo = useRef()
     const dijkstraFrom = useRef()
     const dijkstraTo = useRef()
+    const {t} = useTranslations()
 
     const dijkstra = useDijkstra()
+    const floydWarshall = useFloydWarshall()
 
     useEffect(() => {}, [])
 
@@ -67,6 +86,7 @@ const ActionPanel = () => {
 
             <Separator />
 
+            <SectionTitle>{t('Dijkstra')}</SectionTitle>
             <ActionBlock>
                 <Flex style={{ width: '100%', justifyContent: 'center', gap: '20px' }}>
                     <VertexSelector ref={dijkstraFrom} />
@@ -89,16 +109,25 @@ const ActionPanel = () => {
                                     }
 
                                     return (
-                                        <Flex style={{ flexDirection: 'column' }}>
-                                            <Flex>STEPS:</Flex>
-                                            {steps?.map((el, index) => {
-                                                return (
-                                                    <Flex>
-                                                        {index}): {el.index} ("{el.name}")
-                                                    </Flex>
-                                                )
-                                            })}
-                                            <button onClick={show}>show</button>
+                                        <Flex style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column' }}>
+                                            <Flex $flexDirection='column'>
+                                                {steps?.map((el, index) => {
+                                                    return (
+                                                        <Step>
+                                                            <Flex style={{justifyContent: 'center', alignItems: 'center'}}>
+                                                                step {index}:
+                                                            </Flex>
+                                                            <Flex style={{ width: 'max-content', justifyContent: 'center', alignItems: 'center'}}>
+                                                                <Vertex>
+                                                                    {el.index}
+                                                                </Vertex>
+                                                                ("{el.name}")
+                                                            </Flex>
+                                                        </Step>
+                                                    )
+                                                })}
+                                            </Flex>
+                                            <Button onClick={show}>show</Button>
                                         </Flex>
                                     )
                                 },
@@ -106,18 +135,25 @@ const ActionPanel = () => {
                             })
                         )
                     }}>
-                    Find shortest way with dijkstra algorithm
+                    {t('Calculate')}
                 </Button>
             </ActionBlock>
 
             <Separator />
 
+            <SectionTitle>{t('FloydWarshall')}</SectionTitle>
             <ActionBlock>
                 <Flex style={{ width: '100%', justifyContent: 'center', gap: '20px' }}>
                     <VertexSelector ref={floydFrom} />
                     <VertexSelector ref={floydTo} />
                 </Flex>
-                <Button>Find shortest way</Button>
+                <Button
+                    onClick={() => {
+                        const steps = floydWarshall(floydFrom.current.value.vertexKey, floydTo.current.value.vertexKey)
+
+                        console.log('steps', steps)
+                    }}
+                >{t('Calculate')}</Button>
             </ActionBlock>
         </ActionPanelStyledContainer>
     )

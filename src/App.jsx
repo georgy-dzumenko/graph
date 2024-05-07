@@ -4,11 +4,18 @@ import './App.css'
 import styled from '@theme/styled'
 
 import ContextMenu from '@components/ContextMenu/ContextMenu'
+import CanvasSelector from '@components/CanvasSelector/CanvasSelector'
 import Modal from '@components/Modal/Modal'
-import ActionPanel from '@components/ActionPanel/ActionPanel'
-import Canvas from '@components/Canvas/Canvas'
+
 import fontawesome from '@fortawesome/fontawesome'
-import { faChevronDown } from '@fortawesome/fontawesome-free-solid'
+import { faChevronDown, faPlus, faChevronLeft, faLanguage } from '@fortawesome/fontawesome-free-solid'
+import { useSelector } from 'react-redux'
+import getAuth from './features/auth/getAuth'
+import getInterface from '@features/interface/getInterface'
+import Auth from './components/Auth/Auth'
+import Header from './components/Header/Header'
+import Canvas from './components/Canvas/Canvas'
+import ActionPanel from './components/ActionPanel/ActionPanel'
 
 
 const Container = styled('div')`
@@ -16,16 +23,37 @@ const Container = styled('div')`
     width: 100vw;
 `
 
-fontawesome.library.add(faChevronDown);
+fontawesome.library.add(faChevronDown, faPlus, faChevronLeft, faLanguage);
 
 function App() {
+    const {data} = useSelector(getAuth)
+    const {graphKey} = useSelector(getInterface)
+
     return (
-        <Container>
+        <>
             <ContextMenu />
             <Modal />
-            <Canvas />
-            <ActionPanel />
-        </Container>
+            {data.uid ?
+                <>
+                    <Header>
+
+                    </Header>
+                    <Container>
+                        {graphKey ?
+                                <>
+                                    <Canvas />
+                                    <ActionPanel />
+                                </>
+                            :
+                                <CanvasSelector/>
+                        }
+                    </Container>
+                </>
+                : (
+                    <Auth/>
+                )
+            }
+        </>
     )
 }
 

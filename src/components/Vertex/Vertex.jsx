@@ -39,7 +39,7 @@ const StyledVertex = styled('div')`
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     border-radius: 50%;
-    position: absolute;
+    position: fixed;
     transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
@@ -144,7 +144,8 @@ const Vertex = ({ name, coords, vertexKey, index }) => {
             onMouseLeave={onMouseLeave}
             onClick={onClick}
             $cursor={selectVertexMethod ? 'pointer' : 'auto'}
-            $selectVertexMethod={selectVertexMethod}>
+            $selectVertexMethod={selectVertexMethod}
+            $zIndex={selectVertexMethod ? 100 : 2}>
             <div
                 style={{
                     pointerEvents: 'none',

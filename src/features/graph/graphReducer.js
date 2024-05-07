@@ -98,6 +98,11 @@ export const graphSlice = createSlice({
 
             state.vertexes = sortedVertexes.map((el, index) => ({ ...el, index }))
         },
+        setGraphData: (state, action) => {
+            state.edges = action.payload.edges || [];
+            state.vertexes = action.payload.vertexes || [];
+            state.title = action.payload.title
+        },
         generateMatrix: (state) => {
             const sortedVertexes = state.vertexes.sort((a, b) => new Date(a) - new Date(b))
 
@@ -107,7 +112,7 @@ export const graphSlice = createSlice({
                 for (let j = 0; j < sortedVertexes.length; j++) {
                     adjMatrix[i][j] = state.edges.find(
                         (edges) => edges.startVertex === sortedVertexes[i].vertexKey && edges.endVertex === sortedVertexes[j].vertexKey
-                    ) || { cost: 0 }
+                    ) || { cost: Infinity }
                 }
             }
 
@@ -154,7 +159,8 @@ export const {
     destroyVertex,
     cleanSelectedVertexes,
     setEdgeCost,
-    destroyEdgeByKey
+    destroyEdgeByKey,
+    setGraphData
 } = graphSlice.actions
 
 export default graphSlice.reducer

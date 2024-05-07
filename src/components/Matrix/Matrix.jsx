@@ -13,7 +13,7 @@ const Matrix = () => {
     const dispatch = useDispatch()
 
     return (
-        <table style={{ boxSizing: 'border-box', width: '100%' }}>
+        <table style={{ boxSizing: 'border-box', width: '100%'}}>
             <tr>
                 <td></td>
                 {vertexes.map((el, index) => (

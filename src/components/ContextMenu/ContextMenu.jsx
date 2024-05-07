@@ -45,10 +45,10 @@ const ContextMenu = () => {
     const dispatch = useDispatch()
 
     return isContextMenuOpened ? (
-        <Container onMouseLeave={() => dispatch(closeContextMenu())} style={{ top: contextMenu.coords.y, left: contextMenu.coords.x }}>
+        <Container onMouseLeave={() => dispatch(closeContextMenu())} style={{ top: contextMenu.coords?.y, left: contextMenu.coords?.x }}>
             <Title>{contextMenu.title}</Title>
             <div style={{ width: '100%' }}>
-                {contextMenu.options.map((el) => (
+                {contextMenu.options?.map((el) => (
                     <Option
                         key={el.title}
                         onClick={() => {

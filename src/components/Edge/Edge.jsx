@@ -96,7 +96,7 @@ const Edge = ({ isGhost, endVertex, startVertex, cost, isCurrentEdge, id }) => {
 
     return (
         <>
-            <svg draggable={false} style={{ opacity: isGhost ? 0.4 : 1, width: '100%', height: '100%', pointerEvents: 'none', position: 'absolute', stroke: color, fill: color }}>
+            <svg draggable={false} style={{ opacity: isGhost ? 0.4 : 1, width: '100%', height: '100%', pointerEvents: 'none', position: 'fixed', stroke: color, top: 0, fill: color }}>
                 <marker
                     xmlns='http://www.w3.org/2000/svg'
                     id={`triangle-${randomId.current}`}
@@ -149,7 +149,7 @@ const Edge = ({ isGhost, endVertex, startVertex, cost, isCurrentEdge, id }) => {
             </svg>
             <Flex
                 style={{ pointerEvents: 'none' }}
-                $position='absolute'
+                $position='fixed'
                 $left={
                     (startPoint?.coords?.x < endPoint?.coords?.x
                         ? startPoint?.coords?.x + (endPoint?.coords?.x - startPoint?.coords?.x) / 2

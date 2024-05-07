@@ -1,0 +1,28 @@
+{
+    "en": {
+        "Greetings": "Hello! Are you new for this app? Sing in with Google!",
+        "SignInWithGoogle": "Sign in with Google",
+        "Delete": "Delete",
+        "EnterNameOfYourGraph": "Enter name of your graph",
+        "Submit": "Submit",
+        "Vertex": "Vertex",
+        "Edge": "Edge",
+        "Dijkstra": "Dijkstra",
+        "FloydWarshall": "Floyd-Warshall",
+        "Calculate": "Calculate",
+        "Language": "Language"
+    },
+    "ua": {
+        "Greetings": "Привіт! Новенький на сайті? Увійди через Google!",
+        "SignInWithGoogle": "Увійти через Google",
+        "Delete": "Видалити",
+        "EnterNameOfYourGraph": "Введіть ім'я вашого графу",
+        "Submit": "Підтвердити",
+        "Vertex": "Вершина",
+        "Edge": "Ребро",
+        "Dijkstra": "Дейкстра",
+        "FloydWarshall": "Флойда — Уоршелла",
+        "Calculate": "Вирахувати",
+        "Language": "Мова"
+    }
+}

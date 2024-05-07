@@ -6,24 +6,31 @@ import { closeModal } from '@features/interface/interfaceReducer'
 import getInterface from '@features/interface/getInterface'
 
 import styled from '@theme/styled'
+import Button from '../Button/Button'
+import Flex from '@components/Flex/Flex'
+import SectionTitle from '../SectionTitle/SectionTitle'
 
-const Container = styled('div')`
+const Container = styled(Flex)`
     font-family: Arial, Helvetica, sans-serif;
     position: fixed;
     flex-direction: column;
     justify-content: space-between;
     z-index: 10000;
     background-color: ${'background'};
-    border: solid 1px ${'primary'};
+    border: solid 2px ${'gray'};
     width: 400px;
     height: 300px;
     border-radius: 10px;
-    padding: 15px;
     overflow: hidden;
-    background-color: #ffffffeb;
+    background-color: ${'white'};
     left: calc(50% - 200px);
     top: calc(50% - 200px);
     `
+
+const Content = styled(Flex)`
+    padding: 15px;
+    flex: 1;
+`
 
 const Backdrop = styled('div')`
     top: 0;
@@ -31,31 +38,24 @@ const Backdrop = styled('div')`
     position: absolute;
     width: 100%;
     height: 100%;
-    /* backdrop-filter: blur(10px); */
+    backdrop-filter: blur(10px);
     z-index: 100;
     transition: 0.2s ease;
 `
 
-const Title = styled('div')`
+const Title = styled(SectionTitle)`
     width: 100%;
-    padding: 4px 10px;
-    border-bottom: solid 1px ${'primary'};
+    padding: 8px 0;
+    text-align: center;
+    border-bottom: solid 1px ${'gray'};
 `
 
-const Option = styled('div')`
+const Option = styled(Button)`
     width: max-content;
     height: max-content;
-    padding: 5px 10px;
-    border-radius: 5px;
-    background-color: ${'background'};
-    border: solid 1px ${'primary'};
 
     &:not(:last-child) {
         border-bottom: solid 1px ${'secondary'};
-    }
-
-    &:hover {
-        background-color: transparent;
     }
 `
 
@@ -79,39 +79,19 @@ const Modal = () => {
     return (
         <Backdrop
             style={{
-                // backdropFilter: isFilterActive ? 'blur(10px) grayscale(0.5)' : 'blur(0) grayscale(0)', 
+                backdropFilter: isFilterActive ? 'blur(10px) grayscale(0.5)' : 'blur(0) grayscale(0)', 
                 backgroundColor: isFilterActive ? 'rgba(0,0,0,0.2)' : 'transparent',
                 opacity: +isModalOpened,
                 pointerEvents: isModalOpened ? 'auto' : 'none'
             }}
+            onClick={() => dispatch(closeModal())}
         >
-            <Draggable>
-                <Container style={{
-                    backdropFilter: isFilterActive ? 'blur(0) grayscale(0)' : 'blur(10px) grayscale(0.5)', display: isModalOpened ? 'flex' : 'none'
-                }}>
-                        <div>
-                            <Title>{modal.title}</Title>
-                            {modal.element ? modal.element({modalRef: ref}) : ''}
-                        </div>
-                    <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-                        <Option
-                            key='close'
-                            onClick={() => {
-                                dispatch(closeModal())
-                            }}>
-                            close
-                        </Option>
-                        {modal.options?.map((el) => (
-                            <Option
-                            key={el.title}
-                            onClick={() => {
-                                el.callback()
-                                dispatch(closeModal())
-                            }}>
-                                {el.title}
-                            </Option>
-                        ))}
-                    </div>
+            <Draggable >
+                <Container onClick={(e) => e.stopPropagation()}>
+                    <Title>{modal.title}</Title>
+                    <Content>
+                        {modal.element ? modal.element({modalRef: ref}) : ''}
+                    </Content>
                 </Container>
             </Draggable>
         </Backdrop>

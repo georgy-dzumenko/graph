@@ -13,11 +13,16 @@ import SelectionArea from '@components/SelectionArea/SelectionArea'
 import Flex from '@components/Flex/Flex'
 import Demonstrator from '@components/Demonstrator/Demonstrator'
 import parseEdgeKey from '../../utils/parseEdgeKey'
+import { setGraphData } from '../../features/graph/graphReducer'
+import useDatabaseActions from '../../utils/useDatabaseActions'
 
 const CanvasContainer = styled('div')`
     flex: 1;
     height: 100vh;
     position: relative;
+    background: radial-gradient(circle at center, #82828213 15%, #82828213 15%, transparent 20%);
+    background-size: 30px 30px;
+    background-repeat: repeat;
 `
 
 const EdgesContainer = styled('svg')`
@@ -34,8 +39,9 @@ const VertexesContainer = styled('div')`
 
 const Canvas = () => {
     const canvas = useRef()
-    const { currentEdge, edges, vertexes } = useSelector(getGraph)
-    const { selectVertexMethod, hoverData } = useSelector(getInterface)
+    const { currentEdge, edges, vertexes, title } = useSelector(getGraph)
+    const { selectVertexMethod, hoverData, graphKey } = useSelector(getInterface)
+    const {getData, setData, appendData} = useDatabaseActions()
     const dispatch = useDispatch()
     const [mouseCoords, setMouseCoords] = useState({})
 
@@ -74,10 +80,21 @@ const Canvas = () => {
     }
 
     useEffect(() => {
+        (async () => {
+            const result = await getData('graphs')
+
+            dispatch(setGraphData(result[graphKey]))
+        })()
+    }, [])
+
+    useEffect(() => {
+        appendData('graphs', {[graphKey]: { title, edges, vertexes}})
+
         dispatch(generateMatrix())
     }, [edges, vertexes])
 
     return (
+        <>
         <CanvasContainer
             onClick={addVertex}
             onMouseDown={startSelectionArea}
@@ -95,23 +112,27 @@ const Canvas = () => {
             ref={canvas}>
             <VertexesContainer draggable={false}>
                 {currentEdge && <Edge isCurrentEdge {...{ ...currentEdge, endVertex: currentEdge?.endVertex || mouseCoords }} />}
-                {hoverData && <Edge isGhost startVertex={parseEdgeKey(hoverData)[0]} endVertex={parseEdgeKey(hoverData)[1]} />}
+                {(hoverData && !currentEdge) && <Edge isGhost startVertex={parseEdgeKey(hoverData)[0]} endVertex={parseEdgeKey(hoverData)[1]} />}
                 {edges.map(renderEdge)}
                 {vertexes.map(renderVertex)}
-                <Flex
-                    style={{
-                        transition: '0.5s ease',
-                        backdropFilter: !selectVertexMethod ? 'blur(0px)' : 'blur(10px)',
-                        pointerEvents: !selectVertexMethod ? 'none' : 'auto',
-                        width: '100%',
-                        height: '100%',
-                        position: 'absolute',
-                        background: !selectVertexMethod ? 'transparent' : 'rgba(0,0,0,0.2)'
-                    }}></Flex>
+
                 <Demonstrator/>
                 <SelectionArea canvas={canvas.current} {...selectAreaCoords} />
             </VertexesContainer>
         </CanvasContainer>
+        <Flex
+            style={{
+                transition: '0.5s ease',
+                backdropFilter: !selectVertexMethod ? 'blur(0px)' : 'blur(10px)',
+                pointerEvents: !selectVertexMethod ? 'none' : 'auto',
+                width: '100%',
+                height: '100%',
+                zIndex: 10,
+                position: 'absolute',
+                background: !selectVertexMethod ? 'transparent' : 'rgba(0,0,0,0.2)'
+            }}
+        />
+        </>
     )
 }
 

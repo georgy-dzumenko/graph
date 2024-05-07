@@ -14,7 +14,7 @@ import parseEdgeKey from '@utils/parseEdgeKey'
 const Input = styled('input')`
     cursor: pointer;
     transition: 0.05s ease;
-    border: solid 1px #c1c1c1;
+    border: solid 1px ${'gray'};
     border-radius: 5px;
 
     &:hover {

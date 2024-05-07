@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     isContextMenuOpened: false,
     contextMenu: {},
+    graphKey: '',
     modal: {},
     selectVertexMethod: null,
     isModalOpened: false,
@@ -10,6 +11,7 @@ const initialState = {
         fromVertex: null,
         toVertex: null,
     },
+    language: 'ua',
     demonstrateList: []
 }
 
@@ -17,6 +19,9 @@ export const interfaceSlice = createSlice({
     name: 'interface',
     initialState,
     reducers: {
+        selectGraphKey: (state, action) => {
+            state.graphKey = action.payload
+        },
         openContextMenu: (state, action) => {
             state.contextMenu = action.payload
             state.isContextMenuOpened = true
@@ -41,11 +46,14 @@ export const interfaceSlice = createSlice({
         },
         setDemonstrateList: (state, action) => {
             state.demonstrateList = action.payload
+        },
+        setLanguage: (state, action) => {
+            state.language = action.payload
         }
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { openContextMenu, closeContextMenu, closeModal, openModal, setDemonstrateList, setSelectedVertexMethod, setHoverData } = interfaceSlice.actions
+export const { setLanguage, openContextMenu, closeContextMenu, closeModal, openModal, setDemonstrateList, setSelectedVertexMethod, setHoverData, selectGraphKey } = interfaceSlice.actions
 
 export default interfaceSlice.reducer

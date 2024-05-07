@@ -7,7 +7,7 @@ import getInterface from "@features/interface/getInterface"
 import { setDemonstrateList } from "@features/interface/interfaceReducer"
 
 const StyledDemonstrator = styled('div')`
-    position: absolute;
+    position: fixed;
     width: 35px;
     height: 35px;
     transition: 0.5s ease;

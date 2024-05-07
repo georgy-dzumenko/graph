@@ -3,6 +3,7 @@ import storage from 'redux-persist/lib/storage'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import graphReducer from '@features/graph/graphReducer'
 import interfaceReducer from '@features/interface/interfaceReducer'
+import authReducer from '@features/auth/authReducer'
 
 
 const interfacePersistConfig = {
@@ -17,7 +18,13 @@ const graphPersistConfig = {
     whitelist: ['edges', 'vertexes']
 }
 
+const authPersistConfig = {
+    key: 'auth',
+    storage,
+}
+
 const rootReducer = combineReducers({
+    auth: persistReducer(authPersistConfig, authReducer),
     graph: persistReducer(graphPersistConfig, graphReducer),
     interface: persistReducer(interfacePersistConfig, interfaceReducer)
 })

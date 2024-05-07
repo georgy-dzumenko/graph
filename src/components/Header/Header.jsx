@@ -21,15 +21,16 @@ const Header = () => {
     const dispatch = useDispatch()
     const {t} = useTranslations()
 
-    const onProfileClick = () => {
+    const onProfileClick = (event) => {
         dispatch(openContextMenu({
-            coords: {x: 20, y: 70},
+            coords: {x: event.clientX - 50, y: event.clientY},
+            title: t('Profile'),
             options: [
                 {
                     callback: () => {
                         dispatch(logout())
                     },
-                    title: 'logout'
+                    title: t('Logout')
                 }
             ]
         }))
@@ -58,7 +59,7 @@ const Header = () => {
                         <Flex $width={400}>
                             <Flex  $borderRadius={8} $padding={4} $background="white" onClick={onBackToDashboard} $cursor="pointer" $fontSize={20} $fontWeight="bold" $fontFamily="Areal" $alignItems="center" $marginRight={10}>
                                 <FontAwesomeIcon style={{width: 18, height: 18}} icon="fa-solid fa-chevron-left" />
-                                back to dashboard
+                                {t("BackToDashboard")}
                             </Flex>
                         </Flex>
 

@@ -12,6 +12,8 @@ import { useEffect, useState } from 'react'
 import Button from '../Button/Button'
 import Logo from '../../assets/logo.png'
 import useTranslations from '../../utils/useTranslations'
+import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 
 const Container = styled(Flex)`
     flex: 1;
@@ -37,6 +39,8 @@ const OptionContainer = styled(Flex)`
 `
 
 const Image = styled('img')``
+
+const Input = styled('input')``
 
 const CanvasOption = ({graphKey, title}) => {
     const dispatch = useDispatch()
@@ -76,8 +80,8 @@ const NewGraphModalComponent = ({submitTitle}) => {
     const {t} = useTranslations()
 
     return (
-        <Flex $flex={1} $flexDirection='column'>
-            <input onChange={(event) => setValue(event.target.value)}></input>
+        <Flex $height="100%" $justifyContent="space-between" $flex={1} $flexDirection='column'>
+            <Input $background="white" $borderStyle="solid" $boderWidth={1} $borderColor="gray" placeholder={t("Name")} $padding={6} $fontSize={18} $borderRadius={8} onChange={(event) => setValue(event.target.value)}/>
             <Button onClick={() => submitTitle(value)}>{t('Submit')}</Button>
         </Flex>
     )
@@ -88,6 +92,8 @@ const AddCanvas = () => {
     const {data} = useSelector(getAuth)
     const {appendData, setData, getData} = useDatabaseActions()
     const dispatch = useDispatch()
+    const {t} = useTranslations()
+
     const createNewGraph = async (title) => {
         const graphKey = Math.random().toString()
         await appendData('graphs', {[graphKey]: {title}})
@@ -97,7 +103,7 @@ const AddCanvas = () => {
 
     const onClick = async () => {
         dispatch(openModal({
-            title: 'Enter name of your new graph',
+            title: t('EnterNameOfYourNewGraph'),
             element: ({modalRef}) => <NewGraphModalComponent submitTitle={createNewGraph}/>
         }))
     }
@@ -115,6 +121,7 @@ const AddCanvas = () => {
                 $display='flex'
                 $justifyContent='center'
                 $alignItems='center'
+                $cursor="pointer"
                 onClick={onClick}
             >
                 <FontAwesomeIcon style={{width: 40, height: 40}} icon="fa-solid fa-plus" />
@@ -128,19 +135,40 @@ const CanvasSelector = () => {
     const {appendData, setData, getData} = useDatabaseActions()
     const dispatch = useDispatch()
     const [graphs, setGraphs] = useState([])
+    const {t} = useTranslations()
+
+    const [init, setInit] = useState(true)
 
     useEffect(() => {
         (async () => {
             const result = await getData('graphs')
-            setGraphs(Object.entries(result || {}))
+            setInit(false)
+            console.log(result)
+            setGraphs(Object.entries(result || []).filter(el => el[1]))
         })()
     }, [])
 
     return (
-        <Container>
-            {graphs.map((el) => el[1] ? <CanvasOption graphKey={el[0]} {...el[1]}/> : <></>)}
-            <AddCanvas/>
-        </Container>
+        <SkeletonTheme baseColor='lightGray' highlightColor='white'>
+            <Container $flexDirection={(!init && !graphs.length) ? 'column' : 'row'} $justifyContent={(!init && !graphs.length) ? 'center' : 'auto'} $alignItems={(!init && !graphs.length) ? 'center' : 'auto'}>
+                {init ?
+                        <>
+                            <Skeleton style={{display: 'flex', borderRadius: 16, width: 200, height: 300}}/>
+                            <Skeleton style={{display: 'flex', borderRadius: 16, width: 200, height: 300}}/>
+                            <Skeleton style={{display: 'flex', borderRadius: 16, width: 200, height: 300}}/>
+                        </>
+                    :
+                        !graphs.length ?
+                            <Flex $fontSize={30} $fontWeight="bold" $textAlign="center">
+                                {t('NoGraphsPlaceholder1')} <br/> {t('NoGraphsPlaceholder2')}
+                            </Flex>
+                        :
+                            graphs.map((el) => el[1] ? <CanvasOption graphKey={el[0]} {...el[1]}/> : <></>)
+                }
+                
+                <AddCanvas/>
+            </Container>
+        </SkeletonTheme>
     )
 }
 

@@ -10,7 +10,14 @@
         "Dijkstra": "Dijkstra",
         "FloydWarshall": "Floyd-Warshall",
         "Calculate": "Calculate",
-        "Language": "Language"
+        "Language": "Language",
+        "Profile": "Profile",
+        "Logout": "Logout",
+        "BackToDashboard": "Back to dashboard",
+        "EnterNameOfYourNewGraph": "Enter name of your new graph",
+        "Name": "Name",
+        "NoGraphsPlaceholder1": "You didn't create any graphs yet.",
+        "NoGraphsPlaceholder2": "Click plus button to create one"
     },
     "ua": {
         "Greetings": "Привіт! Новенький на сайті? Увійди через Google!",
@@ -23,6 +30,13 @@
         "Dijkstra": "Дейкстра",
         "FloydWarshall": "Флойда — Уоршелла",
         "Calculate": "Вирахувати",
-        "Language": "Мова"
+        "Language": "Мова",
+        "Profile": "Профіль",
+        "Logout": "Вийти",
+        "BackToDashboard": "Назад на головну",
+        "EnterNameOfYourNewGraph": "Введіть назву вашого графу",
+        "Name": "Ім`я",
+        "NoGraphsPlaceholder1": "Ви ще не створили жодного графа",
+        "NoGraphsPlaceholder2": "Натисність 'плюс' щоб створити свій перший"
     }
 }

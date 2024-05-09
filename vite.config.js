@@ -4,9 +4,9 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    base: '/graph/',
     plugins: [react()],
     resolve: {
-        base: './graph/',
         alias: {
             '@theme': resolve('src/theme'),
             '@features': resolve('src/features'),

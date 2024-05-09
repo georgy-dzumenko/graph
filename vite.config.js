@@ -6,6 +6,7 @@ import { resolve } from 'path'
 export default defineConfig({
     plugins: [react()],
     resolve: {
+        base: '/graph/',
         alias: {
             '@theme': resolve('src/theme'),
             '@features': resolve('src/features'),

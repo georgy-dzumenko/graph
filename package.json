@@ -2,7 +2,7 @@
   "name": "graph",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://georgy-dzumenko.github.io/graph",
+  "homepage": "https://georgy-dzumenko.github.io/graph/",
   "type": "module",
   "scripts": {
     "dev": "vite",

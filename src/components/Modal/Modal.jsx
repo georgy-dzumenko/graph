@@ -89,7 +89,7 @@ const Modal = () => {
             <Draggable >
                 <Container onClick={(e) => e.stopPropagation()}>
                     <Title>{modal.title}</Title>
-                    <Content>
+                    <Content style={{overflow: "scroll"}}>
                         {modal.element ? modal.element({modalRef: ref}) : ''}
                     </Content>
                 </Container>
